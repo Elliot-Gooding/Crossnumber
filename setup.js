@@ -5,6 +5,9 @@ const overflow = 3;
 const nRows = 8;
 const nColumns = 3;
 
+//
+//Creating table
+//
 const cells = [];
 for (let row = 0; row< nRows + 2*overflow; row++){
     const currentRow = table.insertRow(0);
@@ -13,12 +16,6 @@ for (let row = 0; row< nRows + 2*overflow; row++){
         cell.id = nColumns - (column-overflow+1)+","+(row-overflow)
         cell.row = row;
         cell.column = column
-        if (
-            (row > overflow-1 && row <= nRows+overflow-1) &&
-            (column > overflow-1 && column <= nColumns+overflow-1)
-        ){
-            cell.innerText = nColumns - (column-overflow+1)+","+(row-overflow);
-        }
         cells.push(cell);
     }
 }
@@ -39,11 +36,10 @@ function clearScreen(){
     });
 }
 
-function displayFromObj(tetromino, offset, clear=false){
+function displayTetromino(tetromino, offset, clear=false){
     if (clear){
         clearScreen();
     }
-    const colours = ["rgb(190, 20, 45)", "rgb(56, 35, 145)", "rgb(250, 100, 45)", "rgb(190, 240, 45)"]
     const newTetromino = tetromino.rotate(offset[2]);
     newTetromino.squareArr.forEach((square, i) => {
         const x = square.x + offset[0];
@@ -54,7 +50,6 @@ function displayFromObj(tetromino, offset, clear=false){
         if (square.bottom) { cell.style.borderBottom =  "5px solid #FF0000" }
         if (square.left)   { cell.style.borderLeft   =  "5px solid #FF0000" }
         cell.style.backgroundColor = tetromino.colour;
-        // cell.style.backgroundColor = colours[i];
     });
 }
 
