@@ -22,16 +22,17 @@ for (let row = 0; row< nRows + 2*overflow; row++){
 
 function clearScreen(){
     cells.forEach(cell => {
+        //Setting cell to white
         cell.style.backgroundColor = "";
-        cell.style.borderTop    =  "" 
-        cell.style.borderRight  =  "" 
-        cell.style.borderBottom =  "" 
-        cell.style.borderLeft   =  "" 
+        cell.style.borderTop       = "";
+        cell.style.borderRight     = "";
+        cell.style.borderBottom    = "";
+        cell.style.borderLeft      = "";
         if (
             (cell.row > overflow-1 && cell.row <= nRows+overflow-1) &&
             (cell.column > overflow-1 && cell.column <= nColumns+overflow-1)
         ){
-            cell.style.backgroundColor = "rgb(200,200,200)";
+            cell.style.backgroundColor = "rgb(200,200,200)"; //Setting cells in rectangle to grey
         }
     });
 }
@@ -40,21 +41,25 @@ function displayTetromino(tetromino, offset, clear=false){
     if (clear){
         clearScreen();
     }
-    const newTetromino = tetromino.rotate(offset[2]);
+    const newTetromino = tetromino.rotate(offset[2]); //Rotate tetromino
     newTetromino.squareArr.forEach((square, i) => {
+        //Get x and y coordinates of square
         const x = square.x + offset[0];
         const y = square.y + offset[1];
-        const cell = document.getElementById(x+","+y);
+        const cell = document.getElementById(x+","+y); //Get cell at x,y
+        //Set cell borders
         if (square.top)    { cell.style.borderTop    =  "5px solid #FF0000" }
         if (square.right)  { cell.style.borderRight  =  "5px solid #FF0000" }
         if (square.bottom) { cell.style.borderBottom =  "5px solid #FF0000" }
         if (square.left)   { cell.style.borderLeft   =  "5px solid #FF0000" }
-        cell.style.backgroundColor = tetromino.colour;
+        cell.style.backgroundColor = tetromino.colour; //Set cell colour
     });
 }
 
 
-
+//
+// UI code
+//
 let resultNum = 0;
 document.addEventListener('keydown', (event) => {
     if      (event.key === 'ArrowRight' && resultNum < crossNumberCombinations.length-1 )  { resultNum += 1 } 

@@ -1,7 +1,9 @@
-//Object for each 
+//Object for each square in the tetromino
 class Square{
     constructor(booleanBorderValues, x, y){
         [this.top, this.right, this.bottom, this.left] = booleanBorderValues;
+        //X and Y coordinates of square
+        //0, 0 is the top left corner of the tetromino
         this.x = x;
         this.y = y;
     }
@@ -9,7 +11,8 @@ class Square{
     rotate(angle){
         const n = angle/90 //Number of 90 deg rotations (clockwise)
         for (let i = 0; i<n; i++){
-            [this.top, this.right, this.bottom, this.left] = [this.left, this.top, this.right, this.bottom] //Cycle border states by 1
+            //Rotate by cycling border states by 1
+            [this.top, this.right, this.bottom, this.left] = [this.left, this.top, this.right, this.bottom] 
         }
     }
 }
@@ -25,6 +28,7 @@ class Tetromino{
         let squareArr = _.cloneDeep(this.squareArr); //Preventing the mutation of original tetromino
 
         for (let i = 0; i<n; i++){
+            //Performing 90 deg rotation on each square
             squareArr = squareArr.map( square => {
                 const x = square.x;
                 const y = square.y;
@@ -37,7 +41,8 @@ class Tetromino{
         return new Tetromino(squareArr, this.colour);
     }
 
-    testInsideRect(offset){        
+    testInsideRect(offset){   
+        //Checks if all squares are inside the rectangle     
         const minX = Math.min(...this.squareArr.map( square => square.x)) + offset[0];
         const maxX = Math.max(...this.squareArr.map( square => square.x)) + offset[0];
 
@@ -48,29 +53,31 @@ class Tetromino{
             (minX >= 0) && (minY >= 0) &&
             (maxX < nColumns) && (maxY < nRows)
         ) {
-            return true;
+            return true;  //Inside rectangle:  VALID
         } else {
-            return false;
+            return false; //Outside rectangle: INVALID
         }
     }
 
-testOverlap(squares2, offset) {
-    let squareArr = this.rotate(this).squareArr;
-    const squares1 = this.calcFilledSquares(offset)
+    testOverlap(filledSquares, offset) {
+        const tetrominoSquares = this.calcFilledSquares(offset)
 
-    for (const square of squares1) {
-        for (const filledSquare of squares2){
-            if (JSON.stringify(square) === JSON.stringify(filledSquare)){
-                return true;
+        //Checking if any squares are already filled
+        for (const square of tetrominoSquares) {
+            for (const filledSquare of filledSquares){
+                if (JSON.stringify(square) === JSON.stringify(filledSquare)){
+                    return true; //Overlap: INVALID
+                }
             }
         }
+        return false; //No overlap: VALID
     }
-    return false;
-}
 
 
     testOutsideBorder(offset){
-        return !this.squareArr.some((s, i) => {
+        //Checks if any squares have borders on the outside
+        //Note the ! at the start of the return statement
+        return !this.squareArr.some(s => {
             const x=s.x + offset[0];
             const y=s.y + offset[1];
             if (
@@ -79,13 +86,14 @@ testOverlap(squares2, offset) {
                 ( y === 0 && s.bottom ) ||
                 ( y === nRows -1 && s.top    ) 
             ) {
-                return true;
+                return true; //Outside border: INVALID
             }
-            return false;
+            return false; //Inside border: VALID
         });
     }
 
     calcFilledSquares(offset){
+        //Finds all the squares that are filled by the tetromino
         const rotatedTetromino = this.rotate(offset[2]);
         const squareCoords = rotatedTetromino.squareArr.map( square => {
             return [square.x + offset[0], square.y + offset[1]];
