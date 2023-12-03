@@ -1,9 +1,12 @@
 const table = document.getElementById("displayTable");
 const output = document.getElementById("output");
 
-const overflow = 3;
+
 const nRows = 8;
 const nColumns = 3;
+
+const overflow = 3; //Number of cells to add to each side of the table
+//Overflow is used to allow tetrominos to rotate outside the table without causing an error
 
 //
 //Creating table
@@ -32,7 +35,7 @@ function clearScreen(){
             (cell.row > overflow-1 && cell.row <= nRows+overflow-1) &&
             (cell.column > overflow-1 && cell.column <= nColumns+overflow-1)
         ){
-            cell.style.backgroundColor = "rgb(200,200,200)"; //Setting cells in rectangle to grey
+            cell.style.backgroundColor = "rgb(0,100,255)"; //Setting default colour of cells in rectangle to light blue
         }
     });
 }
@@ -52,7 +55,7 @@ function displayTetromino(tetromino, offset, clear=false){
         if (square.right)  { cell.style.borderRight  =  "5px solid #FF0000" }
         if (square.bottom) { cell.style.borderBottom =  "5px solid #FF0000" }
         if (square.left)   { cell.style.borderLeft   =  "5px solid #FF0000" }
-        cell.style.backgroundColor = tetromino.colour; //Set cell colour
+        if (!hideColours)  { cell.style.backgroundColor = tetromino.colour  } //Set cell colour
     });
 }
 
@@ -61,9 +64,13 @@ function displayTetromino(tetromino, offset, clear=false){
 // UI code
 //
 let resultNum = 0;
+let valid = "INVALID";
 document.addEventListener('keydown', (event) => {
     if      (event.key === 'ArrowRight' && resultNum < crossNumberCombinations.length-1 )  { resultNum += 1 } 
     else if (event.key === 'ArrowLeft'  && resultNum > 0)  { resultNum -= 1 }
+    
+    //Specific to this instance of tetrominos
+    if (resultNum >= 2 && resultNum <= 5){ valid = "VALID" } else { valid = "INVALID" }
 });
 
 document.getElementById("collape-borders").addEventListener("change", function() {
@@ -72,4 +79,9 @@ document.getElementById("collape-borders").addEventListener("change", function()
     for (let i = 0; i < elements.length; i++) {
         elements[i].classList.toggle('collapse-borders');
     }
+});
+
+var hideColours = false
+document.getElementById("hide-colours").addEventListener("change", function() {
+    hideColours = !hideColours;
 });

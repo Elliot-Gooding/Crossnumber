@@ -63,7 +63,7 @@ const loop = function(){
     clearScreen();
     crossNumberCombinations[resultNum].forEach( (offset, i) => {
         displayTetromino(tetrominos[i], offset, false);
-        output.innerText = "Result " + (resultNum+1) + " out of " +crossNumberCombinations.length;
+        output.innerText = "Result " + (resultNum+1) + " out of " +crossNumberCombinations.length + ": " + valid;
     });
     requestAnimationFrame(loop);
 }
